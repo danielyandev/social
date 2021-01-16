@@ -25,8 +25,6 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-console.log('aa')
-console.log(Cookies.get('access_token'))
 window.axios.defaults.headers.common['Authorization'] = `Bearer ${Cookies.get('access_token')}`;
 window.axios.defaults.baseURL = API_URL;
 

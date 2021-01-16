@@ -5,10 +5,23 @@
  */
 
 import { BootstrapVue } from 'bootstrap-vue';
+import VueRouter from 'vue-router';
+import {routes} from './routes';
 
 require('./bootstrap');
-
 window.Vue = require('vue');
+
+Vue.use(BootstrapVue)
+Vue.use(VueRouter);
+
+/**
+ * Initiate router
+ * @type {VueRouter}
+ */
+const router = new VueRouter({
+    mode: 'history',
+    routes: routes
+});
 
 /**
  * The following block of code may be used to automatically register your
@@ -21,7 +34,6 @@ window.Vue = require('vue');
 const files = require.context('./', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.use(BootstrapVue)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -30,4 +42,5 @@ Vue.use(BootstrapVue)
 
 const app = new Vue({
     el: '#app',
+    router: router
 });
