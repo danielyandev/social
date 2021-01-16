@@ -2,12 +2,9 @@
 
 namespace App\Exceptions;
 
-use App\Helpers\Api\V1\ResponseHelper;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Helpers\ApiHelper;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -56,7 +53,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($request->wantsJson() && !$exception instanceof ValidationException){
-            return ResponseHelper::error($exception->getMessage(), [], $exception->getCode() ?: 400);
+            return ApiHelper::getResponseSender()->error($exception->getMessage(), [], $exception->getCode() ?: 400);
         }
         return parent::render($request, $exception);
     }

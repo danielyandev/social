@@ -1,17 +1,19 @@
 <?php
 
 
-namespace App\Helpers\Api\V1;
+namespace App\Contracts\Api\V1;
 
+use App\Contracts\SendResponse as SendResponseContract;
 
-class ResponseHelper
+class SendResponse implements SendResponseContract
 {
+
     /**
      * @param array $data
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function success($message = '', $data = [])
+    public function success($message = '', $data = [])
     {
         return response()->json(
             compact('data', 'message')
@@ -24,7 +26,7 @@ class ResponseHelper
      * @param int $status
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function error($message = '', $errors = [], $status = 400)
+    public function error($message = '', $errors = [], $status = 400)
     {
         return response()->json(
             compact('errors', 'message'),
