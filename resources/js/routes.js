@@ -1,13 +1,13 @@
 import Register from "./views/auth/Register";
 import Login from "./views/auth/Login";
-import Home from "./views/Home";
+import Main from "./views/Main";
 
 
 export const routes = [
     {
-        name: 'home',
+        name: 'main',
         path: '/',
-        component: Home
+        component: Main
     },
     {
         name: 'login',

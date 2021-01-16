@@ -1,6 +1,6 @@
 <template>
     <div>
-        Welcome
+        Home page
     </div>
 </template>
 
@@ -9,7 +9,3 @@
         name: "Home"
     }
 </script>
-
-<style scoped>
-
-</style>

@@ -12,9 +12,6 @@
                             </ul>
                         </b-alert>
 
-                        <b-alert variant="success" :show="loggedIn">
-                            Login successful, redirecting
-                        </b-alert>
                         <form @submit.prevent="login">
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
@@ -46,7 +43,6 @@
 </template>
 
 <script>
-    import Cookies from 'js-cookie'
     export default {
         name: "Login",
         data() {
@@ -56,16 +52,11 @@
                     password: '',
                 },
                 errors: [],
-                loggedIn: false,
                 formSubmitted: false,
             }
         },
 
         methods: {
-            redirect: function (url = '/') {
-                window.location.href = url
-            },
-
             login: async function () {
                 if (this.formSubmitted){
                     return false
@@ -74,19 +65,27 @@
                 this.formSubmitted = true
                 this.errors = [];
                 try{
-                    const { data } = await axios.post('/login', this.form)
+                    const {data} = await axios.post('/login', this.form)
                     const {access_token, refresh_token, expires_in} = data.data
                     if (!access_token){
                         this.errors = ['Something went wrong, please try again later']
                     }
 
-                    this.loggedIn = true
-
                     const expires = expires_in / 60 / 60 / 24 // response is in seconds, we need to pass days
-                    Cookies.set('access_token', access_token, {expires})
-                    Cookies.set('refresh_token', refresh_token, {expires})
 
-                    // todo complete login handle
+                    // Save the token.
+                    await this.$store.dispatch('auth/saveToken', {
+                        access_token,
+                        refresh_token,
+                        expires
+                    });
+
+                    // Fetch the user.
+                    await this.$store.dispatch('auth/fetchUser')
+
+                    // Redirect
+                    await this.$router.push({name: 'main'})
+
                 }catch (error) {
                     let errors = await error.response.data.errors
                     this.errors = Object.values(errors).flat()

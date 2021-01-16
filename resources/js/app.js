@@ -4,15 +4,16 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import { BootstrapVue } from 'bootstrap-vue';
-import VueRouter from 'vue-router';
-import {routes} from './routes';
-
-require('./bootstrap');
-window.Vue = require('vue');
+import { BootstrapVue } from 'bootstrap-vue'
+import VueRouter from 'vue-router'
+import {routes} from './routes'
+import './plugins/axios'
+import store from './store'
+require('./bootstrap')
+window.Vue = require('vue')
 
 Vue.use(BootstrapVue)
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 /**
  * Initiate router
@@ -42,5 +43,6 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 
 const app = new Vue({
     el: '#app',
-    router: router
-});
+    router,
+    store
+})

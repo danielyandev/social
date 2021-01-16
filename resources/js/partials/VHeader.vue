@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
-            <router-link to="/" class="navbar-brand">Social network</router-link>
+            <router-link :to="{name: 'main'}" class="navbar-brand">Social network</router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -20,7 +20,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item">
+                            <a @click.prevent="logout" class="dropdown-item" href="#" role="button">
                                 Logout
                             </a>
                         </div>
@@ -41,15 +41,32 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
     export default {
         name: "VHeader",
-        data() {
-            return {
-                user: null
-                // user: {
-                //     id: 1,
-                //     name: 'Test user'
-                // }
+        mounted() {
+            this.checkUser()
+        },
+        computed: {
+            ...mapGetters({
+                user: 'auth/user',
+                access_token: 'auth/access_token',
+            })
+        },
+        methods: {
+            checkUser: function () {
+                if (this.access_token && !this.user){
+                    // todo check if refresh needed
+                    this.$store.dispatch('auth/fetchUser')
+                }
+            },
+
+            logout: async function () {
+                // Log out the user.
+                await this.$store.dispatch('auth/logout')
+
+                // Refresh page
+                window.location.reload()
             }
         }
     }
