@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($request->wantsJson() && !$exception instanceof ValidationException){
-            return ApiHelper::getResponseSender()->error($exception->getMessage(), [], $exception->getCode() ?: 400);
+            return ApiHelper::sendError($exception->getMessage(), [], $exception->getCode() ?: 400);
         }
         return parent::render($request, $exception);
     }

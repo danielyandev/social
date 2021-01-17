@@ -8,6 +8,8 @@ Route::middleware('guest:api')->group(function () {
     Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
 });
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function (){
+    Route::get('/user', [\App\Http\Controllers\Api\V1\UserController::class, 'getAuthUser']);
+    Route::get('/users/search', [\App\Http\Controllers\Api\V1\UserController::class, 'search']);
+    Route::get('/users/{user}', [\App\Http\Controllers\Api\V1\UserController::class, 'show']);
 });

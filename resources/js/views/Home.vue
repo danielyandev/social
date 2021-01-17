@@ -4,8 +4,7 @@
             <user-info :user="user"></user-info>
         </div>
         <div class="col-md-6">
-            <feed-textarea></feed-textarea>
-            <feed></feed>
+            <feed :user="user"></feed>
         </div>
         <div class="col-md-3 d-flex justify-content-center">
             <user-search></user-search>
@@ -16,12 +15,12 @@
 <script>
     import {mapGetters} from "vuex";
     import UserInfo from "../components/UserInfo";
-    import FeedTextarea from "../components/FeedTextarea";
+    import Feed from "../components/Feed";
     import UserSearch from "../components/UserSearch";
 
     export default {
         name: "Home",
-        components: {UserSearch, FeedTextarea, UserInfo},
+        components: {UserSearch, UserInfo, Feed},
         computed: {
             ...mapGetters({
                 user: 'auth/user',

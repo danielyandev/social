@@ -7,8 +7,11 @@
                 <li v-for="user in search_results" class="media mt-4">
                     <img :src="user.avatar" class="mr-3" alt="" style="max-width: 50px">
                     <div class="media-body">
-                        <h6 class="mt-0 mb-1">{{ user.name + ' ' + user.surname }}</h6>
-                        <a href="#" class="ard-link">View profile</a>
+                        <h6 class="mt-0 mb-1">
+                            {{ user.name + ' ' + user.surname }}
+                            <span v-if="auth_user.id === user.id"> (You)</span>
+                        </h6>
+                        <router-link :to="{name: 'user', params: {id: user.id}}" class="ard-link">View profile</router-link>
                     </div>
                 </li>
             </ul>
@@ -17,6 +20,8 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
         name: "UserSearch",
         data() {
@@ -27,6 +32,9 @@
             }
         },
         computed: {
+            ...mapGetters({
+                auth_user: 'auth/user',
+            }),
             show_search_hint: function () {
                 return this.search_phrase.length < this.search_phrase_min_length
             }
@@ -38,23 +46,8 @@
                     return false
                 }
 
-                // todo make request
-                // const {data} = await axios.get()
-                const data = [
-                    {
-                        id: 11,
-                        name: 'Ruben',
-                        surname: 'Danielyan',
-                        avatar: 'http://social.loc/img/default.png',
-                    },
-                    {
-                        id: 12,
-                        name: 'Other',
-                        surname: 'User',
-                        avatar: 'http://social.loc/img/default.png',
-                    }
-                ]
-                this.search_results = data
+                const {data} = await axios.get('/users/search', {params: {phrase: this.search_phrase}});
+                this.search_results = data.data
 
             }
         }

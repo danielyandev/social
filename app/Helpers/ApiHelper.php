@@ -7,20 +7,28 @@ namespace App\Helpers;
 class ApiHelper
 {
     /**
-     * @return string
+     * @param array $data
+     * @param string $message
+     * @return \Illuminate\Http\JsonResponse
      */
-    public static function getVersion()
+    public static function sendSuccess($message = '', $data = [])
     {
-        // the result will be api/v{VERSION}, the version starts on 6th char
-        $prefix = request()->route()->getPrefix();
-
-        return substr($prefix, 5) ?: config('app.api_version_latest');
+        return response()->json(
+            compact('data', 'message')
+        );
     }
 
-    public static function getResponseSender()
+    /**
+     * @param string $message
+     * @param array $errors
+     * @param int $status
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function sendError($message = '', $errors = [], $status = 400)
     {
-        $version = self::getVersion();
-        $responseClassname = "App\Contracts\Api\V{$version}\SendResponse";
-       return new $responseClassname();
+        return response()->json(
+            compact('errors', 'message'),
+            $status
+        );
     }
 }
