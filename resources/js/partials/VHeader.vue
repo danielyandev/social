@@ -41,26 +41,10 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
     export default {
         name: "VHeader",
-        mounted() {
-            this.checkUser()
-        },
-        computed: {
-            ...mapGetters({
-                user: 'auth/user',
-                access_token: 'auth/access_token',
-            })
-        },
+        props: ['user'],
         methods: {
-            checkUser: function () {
-                if (this.access_token && !this.user){
-                    // todo check if refresh needed
-                    this.$store.dispatch('auth/fetchUser')
-                }
-            },
-
             logout: async function () {
                 // Log out the user.
                 await this.$store.dispatch('auth/logout')
