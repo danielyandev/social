@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -25,7 +26,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'email_verified_at'
+        'password', 'email_verified_at', 'email'
     ];
 
     /**
@@ -54,4 +55,102 @@ class User extends Authenticatable
     {
         return $this->created_at->diffForHumans();
     }
+
+    public function getFriendRequestsCountAttribute()
+    {
+        return $this->friendRequests()->count();
+    }
+
+    /**
+     * Simulate relation access, allow to access by $user->relationships,
+     * because relationships method doesn't return laravel defined relation
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getRelationshipsAttribute()
+    {
+        return $this->relationships()->get();
+    }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getFriendsAttribute()
+    {
+        return $this->friends()->get();
+    }
+
+    public function getFriendsCountAttribute()
+    {
+        return $this->friends()->count();
+    }
+
+    /**
+     * Questionable implementation of model relation,
+     * but only this matches requirements
+     *
+     * Return users query who requested or were requested for relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function relationships()
+    {
+        $id = $this->id;
+        return $this->query()
+            ->selectRaw('users.*, relationships.*, relationships.id as relationship_id')
+            ->join('relationships', function ($join) use ($id){
+                $join->on('users.id', '=', 'relationships.sender_user_id')
+                    ->orOn('users.id', '=', 'relationships.receiver_user_id');
+            })
+            ->where(function ($query) use ($id){
+                $query->where('relationships.sender_user_id', $id)
+                    ->orWhere('relationships.receiver_user_id', $id);
+            })
+            ->where('users.id', '!=', $id);
+    }
+
+    /**
+     * Append additional fields to user to determine relationship status
+     *
+     * @param null|int $other_user_id
+     * @return $this
+     */
+    public function appendRelationshipAttributes($other_user_id = null)
+    {
+        $other_user_id = $other_user_id ?: Auth::id();
+        $relationship = $this->relationships()->find($other_user_id);
+
+        $relationship_status = null;
+        $is_sender = null;
+        $relationship_id = null;
+        if ($relationship){
+            $relationship_status = Relationship::getStatusLabel($relationship->status);
+            $is_sender = $relationship->sender_user_id == $this->id;
+            $relationship_id = $relationship->relationship_id;
+        }
+
+        $this->attributes['relationship'] =  [
+            'id' => $relationship_id,
+            'status' => $relationship_status,
+            'is_sender' => $is_sender,
+        ];
+        return $this;
+    }
+
+    /**
+     * Accepted relations
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function friends()
+    {
+        return $this->relationships()->where('status', Relationship::$statuses['accepted']);
+    }
+
+    public function friendRequests()
+    {
+        return $this->relationships()->where('receiver_user_id', $this->id)->where('status', Relationship::$statuses['pending']);
+    }
+
 }

@@ -7,12 +7,14 @@ use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function getAuthUser(Request $request)
     {
-        return UserResource::make($request->user());
+        $user = $request->user()->append('friends_count', 'friend_requests_count');
+        return UserResource::make($user);
     }
 
     public function search(Request $request)
@@ -28,6 +30,8 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        $user->appendRelationshipAttributes();
+        $user->append('friends_count');
         return UserResource::make($user);
     }
 }
