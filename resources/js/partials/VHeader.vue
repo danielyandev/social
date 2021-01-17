@@ -13,20 +13,7 @@
                 </ul>
 
                 <!-- Right Side Of Navbar-->
-                <ul v-if="user" class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.name }}
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a @click.prevent="logout" class="dropdown-item" href="#" role="button">
-                                Logout
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-                <ul v-else class="navbar-nav ml-auto">
+                <ul v-if="!loggedIn" class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
                     <li class="nav-item">
                         <router-link :to="{name: 'login'}" class="nav-item nav-link">Login</router-link>
@@ -43,15 +30,6 @@
 <script>
     export default {
         name: "VHeader",
-        props: ['user'],
-        methods: {
-            logout: async function () {
-                // Log out the user.
-                await this.$store.dispatch('auth/logout')
-
-                // Refresh page
-                window.location.reload()
-            }
-        }
+        props: ['loggedIn']
     }
 </script>

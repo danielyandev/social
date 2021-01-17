@@ -1,8 +1,8 @@
 <template>
     <div v-if="ready">
-        <v-header :user="user"></v-header>
+        <v-header :logged-in="logged_in"></v-header>
         <br>
-        <router-view></router-view>
+        <router-view class="container-fluid"></router-view>
     </div>
 </template>
 
@@ -24,6 +24,7 @@
             ...mapGetters({
                 user: 'auth/user',
                 access_token: 'auth/access_token',
+                logged_in: 'auth/logged_in'
             })
         },
         methods: {
