@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->group(function ($router) {
-    require base_path('routes/api.v1.php');
+Route::middleware('guest:api')->group(function () {
+    Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
+    Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
+});
+
+Route::middleware('auth:api')->group(function (){
+    Route::get('/user', [\App\Http\Controllers\UserController::class, 'getAuthUser']);
+    Route::get('/users/search', [\App\Http\Controllers\UserController::class, 'search']);
+    Route::get('/users/{user}', [\App\Http\Controllers\UserController::class, 'show']);
 });
