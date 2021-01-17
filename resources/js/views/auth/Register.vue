@@ -74,6 +74,7 @@
 
 <script>
     import Cookies from 'js-cookie'
+    import {mapGetters} from "vuex";
     export default {
         name: "Register",
         data() {
@@ -88,6 +89,16 @@
                 errors: [],
                 registered: false,
                 formSubmitted: false,
+            }
+        },
+        computed: {
+            ...mapGetters({
+                logged_in: 'auth/logged_in',
+            })
+        },
+        created() {
+            if (this.logged_in){
+                this.$router.push({name: 'main'})
             }
         },
         methods: {

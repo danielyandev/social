@@ -43,6 +43,8 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
         name: "Login",
         data() {
@@ -55,7 +57,16 @@
                 formSubmitted: false,
             }
         },
-
+        computed: {
+            ...mapGetters({
+                logged_in: 'auth/logged_in',
+            })
+        },
+        created() {
+            if (this.logged_in){
+                this.$router.push({name: 'main'})
+            }
+        },
         methods: {
             login: async function () {
                 if (this.formSubmitted){

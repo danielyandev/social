@@ -14,6 +14,7 @@ export const getters = {
     user: state => state.user,
     access_token: state => state.access_token,
     refresh_token: state => state.refresh_token,
+    logged_in: state => !!state.user
 }
 
 // Mutations

@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <div v-if="ready">
         <v-header :user="user"></v-header>
         <br>
         <router-view></router-view>
@@ -12,8 +12,13 @@
     export default {
         name: "App",
         components: {VHeader},
-        mounted() {
-            this.checkUser()
+        async mounted() {
+            await this.checkUser()
+        },
+        data(){
+            return {
+                ready: false
+            }
         },
         computed: {
             ...mapGetters({
@@ -22,11 +27,13 @@
             })
         },
         methods: {
-            checkUser: function () {
+            checkUser: async function () {
                 if (this.access_token && !this.user){
                     // todo check if refresh needed
-                    this.$store.dispatch('auth/fetchUser')
+                    await this.$store.dispatch('auth/fetchUser')
                 }
+
+                this.ready = true
             },
         }
     }
