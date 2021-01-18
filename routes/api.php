@@ -27,5 +27,5 @@ Route::middleware('auth:api')->group(function (){
     Route::get('/users/search', [UserController::class, 'search']);
     Route::get('/users/{user}', [UserController::class, 'show']);
 
-    Route::apiResource('/relationships', 'RelationshipController')->only(['store', 'update', 'destroy']);
+    Route::apiResource('/relationships', 'RelationshipController')->only(['index','store', 'update', 'destroy']);
 });

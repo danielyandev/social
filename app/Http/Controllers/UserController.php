@@ -40,6 +40,9 @@ class UserController extends Controller
     {
         $user->appendRelationshipAttributes();
         $user->append('friends_count');
+        if ($user->id == Auth::id()){
+            $user->append('friend_requests_count');
+        }
         return UserResource::make($user);
     }
 

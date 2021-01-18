@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->created_at->diffForHumans();
     }
 
+    public function getFriendRequestsAttribute()
+    {
+        return $this->friendRequests()->get();
+    }
+
     public function getFriendRequestsCountAttribute()
     {
         return $this->friendRequests()->count();
@@ -148,6 +153,11 @@ class User extends Authenticatable
         return $this->relationships()->where('status', Relationship::$statuses['accepted']);
     }
 
+    /**
+     * Requested users
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function friendRequests()
     {
         return $this->relationships()->where('receiver_user_id', $this->id)->where('status', Relationship::$statuses['pending']);

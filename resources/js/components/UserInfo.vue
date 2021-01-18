@@ -12,7 +12,12 @@
                     View
                 </b-button>
             </li>
-            <li v-if="current_user" class="list-group-item">Requests: {{ user.friend_requests_count }}</li>
+            <li v-if="current_user" class="list-group-item">
+                Requests: {{ user.friend_requests_count }}
+                <b-button v-if="user.friend_requests_count" @click="open_friend_requests_modal" size="sm" variant="success" class="float-right">
+                    View
+                </b-button>
+            </li>
         </ul>
         <div v-if="current_user" class="card-body">
             <a @click.prevent="logout" href="#" class="card-link">Logout</a>
@@ -36,21 +41,25 @@
         <b-modal v-model="show_friends_modal" id="modal-friends" title="Friends" scrollable :hide-footer="true">
             <user-search-list type="friends" :modal-close-callback="close_friends_modal"></user-search-list>
         </b-modal>
+        <b-modal v-model="show_friend_requests_modal" id="modal-friend-requests" title="Friend requests" scrollable :hide-footer="true">
+            <friend-requests-list :respond_request="respond_request" :modal-close-callback="close_friend_requests_modal"></friend-requests-list>
+        </b-modal>
     </div>
 </template>
 
 <script>
     import {mapGetters} from "vuex";
     import UserSearchList from "./UserSearchList";
+    import FriendRequestsList from "./FriendRequestsList";
 
     export default {
         name: "UserInfo",
-        components: {UserSearchList},
+        components: {FriendRequestsList, UserSearchList},
         props: ['user'],
         data() {
             return {
                 show_friends_modal: false,
-                friends: []
+                show_friend_requests_modal: false
             }
         },
         computed: {
@@ -91,12 +100,18 @@
                 const {data} = await axios.put('/relationships/' +  this.user.relationship.id, {status})
                 this.user.relationship.status = data.data.status
             },
-            open_friends_modal: async function () {
+            open_friends_modal: function () {
                 this.show_friends_modal = true
             },
             close_friends_modal: function () {
                 this.show_friends_modal = false
             },
+            open_friend_requests_modal: function () {
+                this.show_friend_requests_modal = true
+            },
+            close_friend_requests_modal: function () {
+                this.show_friend_requests_modal = false
+            }
         }
     }
 </script>

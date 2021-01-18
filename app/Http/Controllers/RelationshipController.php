@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\RelationshipResource;
+use App\Http\Resources\UserCollection;
 use App\Relationship;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RelationshipController extends Controller
 {
+    public function index()
+    {
+        $requestedUsers = Auth::user()->friendRequests;
+        foreach ($requestedUsers as $user){
+            $user->appendRelationshipAttributes();
+        }
+        return UserCollection::make($requestedUsers);
+    }
     /**
      * Store a newly created resource in storage.
      *

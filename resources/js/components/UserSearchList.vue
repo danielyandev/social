@@ -9,7 +9,7 @@
                     <h6 class="mt-0 mb-1">
                         {{ user.name + ' ' + user.surname }}
                     </h6>
-                    <a @click.prevent="show_user_page(user.id)" href="#" class="ard-link">View profile</a>
+                    <a @click.prevent="show_user_page(user.id)" href="#" class="card-link">View profile</a>
                 </div>
             </li>
         </ul>
