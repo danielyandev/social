@@ -98,10 +98,10 @@ class User extends Authenticatable
     {
         $id = $this->id;
         return $this->query()
-            ->selectRaw('users.*, relationships.*, relationships.id as relationship_id')
+            ->selectRaw('users.*, relationships.id as relationship_id, relationships.status, relationships.sender_user_id, relationships.receiver_user_id')
             ->join('relationships', function ($join) use ($id){
-                $join->on('users.id', '=', 'relationships.sender_user_id')
-                    ->orOn('users.id', '=', 'relationships.receiver_user_id');
+                $join->on('relationships.sender_user_id', '=', 'users.id')
+                    ->orOn('relationships.receiver_user_id', '=', 'users.id');
             })
             ->where(function ($query) use ($id){
                 $query->where('relationships.sender_user_id', $id)

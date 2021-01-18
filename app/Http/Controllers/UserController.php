@@ -22,9 +22,17 @@ class UserController extends Controller
         if (!$request->phrase){
             return [];
         }
-        $users = User::where('name', 'like', $request->phrase . '%')
-            ->orWhere('surname', 'like', $request->phrase . '%')
-            ->paginate(5);
+        $users = User::where('id', '!=', Auth::id())->where(function ($query) use ($request){
+            $query->where('name', 'like', $request->phrase . '%')
+                ->orWhere('surname', 'like', $request->phrase . '%');
+        });
+
+        if ($request->friends){
+            $friend_ids = Auth::user()->friends()->pluck('id')->toArray();
+            $users->whereIn('id', $friend_ids);
+        }
+
+        $users = $users->paginate(10);
         return UserCollection::make($users);
     }
 
@@ -33,5 +41,11 @@ class UserController extends Controller
         $user->appendRelationshipAttributes();
         $user->append('friends_count');
         return UserResource::make($user);
+    }
+
+    public function getFriends()
+    {
+        $friends = Auth::user()->friends()->paginate(10);
+        return UserCollection::make($friends);
     }
 }

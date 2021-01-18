@@ -19,6 +19,4 @@ Route::get('{uri}', function () {
     return view('index');
 })->where('uri', '.*');
 
-//Route::get('{uri}', [\App\Http\Controllers\Controller::class, 'test'])->where('uri', '.*');
-
 Auth::routes();

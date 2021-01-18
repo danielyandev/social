@@ -6,7 +6,12 @@
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">Joined: {{ user.join_date }}</li>
-            <li class="list-group-item">Friends: {{ user.friends_count }}</li>
+            <li class="list-group-item">
+                Friends: {{ user.friends_count }}
+                <b-button v-if="current_user" @click="open_friends_modal" size="sm" variant="success" class="float-right">
+                    View
+                </b-button>
+            </li>
             <li v-if="current_user" class="list-group-item">Requests: {{ user.friend_requests_count }}</li>
         </ul>
         <div v-if="current_user" class="card-body">
@@ -27,15 +32,27 @@
                 <a @click.prevent="send_friend_request" href="#" class="card-link text-success">Add friend</a>
             </p>
         </div>
+
+        <b-modal v-model="show_friends_modal" id="modal-friends" title="Friends" scrollable :hide-footer="true">
+            <user-search-list type="friends" :modal-close-callback="close_friends_modal"></user-search-list>
+        </b-modal>
     </div>
 </template>
 
 <script>
     import {mapGetters} from "vuex";
+    import UserSearchList from "./UserSearchList";
 
     export default {
         name: "UserInfo",
+        components: {UserSearchList},
         props: ['user'],
+        data() {
+            return {
+                show_friends_modal: false,
+                friends: []
+            }
+        },
         computed: {
             ...mapGetters({
                 auth_user: 'auth/user',
@@ -73,7 +90,13 @@
             respond_request: async function (status) {
                 const {data} = await axios.put('/relationships/' +  this.user.relationship.id, {status})
                 this.user.relationship.status = data.data.status
-            }
+            },
+            open_friends_modal: async function () {
+                this.show_friends_modal = true
+            },
+            close_friends_modal: function () {
+                this.show_friends_modal = false
+            },
         }
     }
 </script>

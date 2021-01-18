@@ -23,6 +23,7 @@ Route::middleware('guest:api')->group(function () {
 
 Route::middleware('auth:api')->group(function (){
     Route::get('/user', [UserController::class, 'getAuthUser']);
+    Route::get('/users/friends', [UserController::class, 'getFriends']);
     Route::get('/users/search', [UserController::class, 'search']);
     Route::get('/users/{user}', [UserController::class, 'show']);
 
