@@ -13,10 +13,11 @@ class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @param Request $request
      * @param User $user
      * @return PostCollection
      */
-    public function index(User $user)
+    public function index(Request $request, User $user)
     {
         $authUser = Auth::user();
         $take_only_public = true;
@@ -30,7 +31,10 @@ class PostController extends Controller
         if ($take_only_public){
             $posts->public();
         }
-        $posts = $posts->orderByDesc('id')->paginate(10);
+        if ($request->skip){
+            $posts->skip($request->skip);
+        }
+        $posts = $posts->orderByDesc('id')->take(10)->get();
 
         return PostCollection::make($posts);
     }

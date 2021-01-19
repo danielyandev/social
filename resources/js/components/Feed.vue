@@ -21,6 +21,8 @@
                         </div>
                     </div>
                 </div>
+
+                <infinite-loading @infinite="load_more"></infinite-loading>
             </div>
             <p v-else class="text-center">Nothing in feed</p>
         </div>
@@ -28,11 +30,12 @@
 </template>
 
 <script>
-    import FeedTextarea from "./FeedTextarea";
-    import {mapGetters} from "vuex";
+    import FeedTextarea from "./FeedTextarea"
+    import {mapGetters} from "vuex"
+    import InfiniteLoading from 'vue-infinite-loading'
     export default {
         name: "Feed",
-        components: {FeedTextarea},
+        components: {FeedTextarea, InfiniteLoading},
         props: ['user'],
         async mounted() {
             await this.fetch_posts()
@@ -50,6 +53,9 @@
                 return this.auth_user.id === this.user.id || this.user.relationship.status === 'accepted';
 
 
+            },
+            posts_url: function () {
+                return '/users/' + this.user.id + '/posts'
             }
         },
         methods: {
@@ -58,11 +64,20 @@
             },
             fetch_posts: async function () {
                 try{
-                    const {data} = await axios.get('/users/' + this.user.id + '/posts')
+                    const {data} = await axios.get(this.posts_url)
                     this.posts = data.data
                     // console.log(this.posts)
                 }catch (e) {
                     // todo handle error
+                }
+            },
+            load_more: async function ($state) {
+                const {data} = await axios.get(this.posts_url, {params: {skip: this.posts.length}})
+                if (data.data.length) {
+                    this.posts.push(...data.data);
+                    $state.loaded();
+                } else {
+                    $state.complete();
                 }
             }
         },
