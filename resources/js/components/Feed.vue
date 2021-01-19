@@ -22,7 +22,10 @@
                     </div>
                 </div>
 
-                <infinite-loading @infinite="load_more"></infinite-loading>
+                <infinite-loading @infinite="load_more">
+                    <div slot="no-more">No more posts</div>
+                    <div slot="no-results"></div>
+                </infinite-loading>
             </div>
             <p v-else class="text-center">Nothing in feed</p>
         </div>
