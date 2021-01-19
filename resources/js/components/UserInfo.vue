@@ -7,14 +7,14 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">Joined: {{ user.join_date }}</li>
             <li class="list-group-item">
-                Friends: {{ user.friends_count }}
+                Friends: {{ current_user ? auth_user.friends_count : user.friends_count }}
                 <b-button v-if="current_user" @click="open_friends_modal" size="sm" variant="success" class="float-right">
                     View
                 </b-button>
             </li>
             <li v-if="current_user" class="list-group-item">
-                Requests: {{ user.friend_requests_count }}
-                <b-button v-if="user.friend_requests_count" @click="open_friend_requests_modal" size="sm" variant="success" class="float-right">
+                Requests: {{ auth_user.friend_requests_count }}
+                <b-button v-if="auth_user.friend_requests_count" @click="open_friend_requests_modal" size="sm" variant="success" class="float-right">
                     View
                 </b-button>
             </li>
@@ -99,6 +99,12 @@
             respond_request: async function (status) {
                 const {data} = await axios.put('/relationships/' +  this.user.relationship.id, {status})
                 this.user.relationship.status = data.data.status
+
+                if (status === 'accepted'){
+                    await this.$store.dispatch('auth/incrementFriendsCount')
+                }
+
+                await this.$store.dispatch('auth/decrementFriendRequestsCount')
             },
             open_friends_modal: function () {
                 this.show_friends_modal = true

@@ -19,8 +19,6 @@
 </template>
 
 <script>
-    import UserSearchList from "./UserSearchList";
-
     export default {
         name: "FriendRequestsList",
         props: ['modalCloseCallback'],
@@ -55,6 +53,11 @@
                         user.relationship.status = data.data.status
                     }
                 })
+                if (status === 'accepted'){
+                    await this.$store.dispatch('auth/incrementFriendsCount')
+                }
+
+                await this.$store.dispatch('auth/decrementFriendRequestsCount')
             },
         }
     }

@@ -44,6 +44,18 @@ export const mutations = {
 
         Cookies.remove('access_token')
         Cookies.remove('refresh_token')
+    },
+
+    [types.INCREMENT_FRIENDS_COUNT](state) {
+        state.user.friends_count++
+    },
+
+    [types.DECREMENT_FRIENDS_COUNT](state) {
+        state.user.friends_count--
+    },
+
+    [types.DECREMENT_FRIEND_REQUESTS_COUNT](state) {
+        state.user.friend_requests_count--
     }
 }
 
@@ -68,5 +80,17 @@ export const actions = {
         } catch (e) {
         }
         commit(types.LOGOUT)
+    },
+
+    async incrementFriendsCount({commit}){
+        commit(types.INCREMENT_FRIENDS_COUNT)
+    },
+
+    async decrementFriendsCount({commit}){
+        commit(types.DECREMENT_FRIENDS_COUNT)
+    },
+
+    async decrementFriendRequestsCount({commit}){
+        commit(types.DECREMENT_FRIEND_REQUESTS_COUNT)
     }
 }
