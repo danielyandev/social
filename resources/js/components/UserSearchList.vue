@@ -58,7 +58,7 @@
                 return this.search_results.meta.current_page < this.search_results.meta.last_page
             },
             search_friends: function () {
-                return this.type === 'friends'
+                return this.type === 'friends' ? 1 : 0
             }
         },
         methods: {
@@ -95,7 +95,7 @@
                 let url = ''
                 if (this.search_friends){
                     if (this.search_phrase.length){
-                        url = '/users/search?friends=true&phrase=' + this.search_phrase
+                        url = '/users/search?friends=1&phrase=' + this.search_phrase
                     }else{
                         url = '/users/friends'
                     }

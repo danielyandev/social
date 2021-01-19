@@ -23,8 +23,23 @@ class UserController extends Controller
             return [];
         }
         $users = User::where('id', '!=', Auth::id())->where(function ($query) use ($request){
+            $spaced = explode(' ', $request->phrase);
+            $name = $spaced[0];
+            $surname = $spaced[1] ?? null;
+
+            // find by any of columns
             $query->where('name', 'like', $request->phrase . '%')
                 ->orWhere('surname', 'like', $request->phrase . '%');
+
+            // find by name and surname search
+            if ($surname){
+                $query->orWhere(function ($q) use ($name, $surname){
+                    $q->where('name', $name)->where('surname', 'like', $surname . '%');
+                });
+                $query->orWhere(function ($q) use ($name, $surname){
+                    $q->where('surname', $name)->where('name', 'like', $surname . '%');
+                });
+            }
         });
 
         if ($request->friends){
