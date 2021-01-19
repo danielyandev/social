@@ -36,6 +36,9 @@
             <p v-else>
                 <a @click.prevent="send_friend_request" href="#" class="card-link text-success">Add friend</a>
             </p>
+            <p>
+                <router-link :to="{name: 'main'}" class="card-link text-primary">Go to my page</router-link>
+            </p>
         </div>
 
         <b-modal v-model="show_friends_modal" id="modal-friends" title="Friends" scrollable :hide-footer="true">
