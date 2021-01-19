@@ -163,4 +163,15 @@ class User extends Authenticatable
         return $this->relationships()->where('receiver_user_id', $this->id)->where('status', Relationship::$statuses['pending']);
     }
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function hasFriend($user)
+    {
+        $user_id = $user instanceof User ? $user->id : $user;
+        return $this->friends()->where('users.id', $user_id)->exists();
+    }
+
 }

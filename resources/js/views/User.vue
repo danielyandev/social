@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row" v-if="user">
         <div class="col-md-3 d-flex justify-content-center">
             <user-info :user="user"></user-info>
         </div>
@@ -16,7 +16,6 @@
     import UserInfo from '../components/UserInfo'
     import Feed from '../components/Feed'
     import UserSearch from '../components/UserSearch'
-    import axios from 'axios'
     import {mapGetters} from "vuex";
     export default {
         name: "User",
@@ -29,7 +28,7 @@
             }
         },
         async mounted() {
-            await this.fetchUser()
+            await this.fetch_user()
         },
         data(){
             return {
@@ -44,11 +43,11 @@
         },
         watch: {
             id: async function () {
-                await this.fetchUser()
+                await this.fetch_user()
             }
         },
         methods: {
-            fetchUser: async function () {
+            fetch_user: async function () {
                 if (this.allow_fetch){
                     const {data} = await axios.get('/users/' + this.id)
                     this.user = data.data

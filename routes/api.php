@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,9 +24,12 @@ Route::middleware('guest:api')->group(function () {
 
 Route::middleware('auth:api')->group(function (){
     Route::get('/user', [UserController::class, 'getAuthUser']);
-    Route::get('/users/friends', [UserController::class, 'getFriends']);
+    Route::get('/user/friends', [UserController::class, 'getFriends']);
+
     Route::get('/users/search', [UserController::class, 'search']);
     Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::get('/users/{user}/posts', [PostController::class, 'index']);
+    Route::post('/users/{user}/posts', [PostController::class, 'store']);
 
     Route::apiResource('/relationships', 'RelationshipController')->only(['index','store', 'update', 'destroy']);
 });

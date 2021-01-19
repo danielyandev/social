@@ -88,7 +88,7 @@
                 }
             },
             fetch_friends: async function (page = 1) {
-                const {data} = await axios.get('/users/friends?page=' + page)
+                const {data} = await axios.get('/user/friends?page=' + page)
                 this.search_results = data
             },
             change_page: async function (page = 1, search = false) {
@@ -97,7 +97,7 @@
                     if (this.search_phrase.length){
                         url = '/users/search?friends=1&phrase=' + this.search_phrase
                     }else{
-                        url = '/users/friends'
+                        url = '/user/friends'
                     }
                 }else{
                     url = '/users/search?phrase=' + this.search_phrase
