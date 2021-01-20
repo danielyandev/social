@@ -216,7 +216,19 @@
                                 "schema": {
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/User"
+                                            "type": "object",
+                                            "example": {
+                                                "id": 1,
+                                                "name": "John",
+                                                "surname": "Doe",
+                                                "avatar": "http://site.com/img/avatar.png",
+                                                "friends_count": 355,
+                                                "friend_requests_count": 6,
+                                                "email": "user@gmail.com",
+                                                "created_at": "2021-01-15 12:59:20",
+                                                "updated_at": "2021-01-20 04:25:15",
+                                                "join_date": "10 days ago"
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -321,6 +333,83 @@
                 ]
             }
         },
+        "/users/{user}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user by id",
+                "description": "Get user with relationship info",
+                "operationId": "App\\Http\\Controllers\\UserController::show",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id to fetch",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "id": 1,
+                                                "avatar": "http://site.com/img/default.png",
+                                                "friends_count": 0,
+                                                "name": "Test",
+                                                "surname": "First",
+                                                "relationship": {
+                                                    "id": 8,
+                                                    "status": "pending",
+                                                    "is_sender": false
+                                                },
+                                                "created_at": "2021-01-16T13:39:29",
+                                                "updated_at": "2021-01-16T13:39:29",
+                                                "join_date": "4 days ago"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "/user/friends?page={page}": {
             "get": {
                 "tags": [
@@ -413,6 +502,17 @@
                     "name": "UserCollection"
                 }
             },
+            "UserResource": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserResource"
+                }
+            },
             "User": {
                 "properties": {
                     "id": {
@@ -434,6 +534,11 @@
                         "type": "string",
                         "readOnly": "true",
                         "example": "http://site.com/img/avatar.png"
+                    },
+                    "friends_count": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "355"
                     },
                     "email": {
                         "description": "User unique email address",

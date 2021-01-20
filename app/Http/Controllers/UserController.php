@@ -21,7 +21,18 @@ class UserController extends Controller
      *    response=200,
      *    description="Success",
      *    @OA\JsonContent(
-     *       @OA\Property(property="data", type="object", ref="#/components/schemas/User")
+     *       @OA\Property(property="data", type="object", example={
+     *                                                  "id": 1,
+     *                                                  "name": "John",
+     *                                                  "surname": "Doe",
+     *                                                  "avatar": "http://site.com/img/avatar.png",
+     *                                                  "friends_count": 355,
+     *                                                  "friend_requests_count": 6,
+     *                                                  "email": "user@gmail.com",
+     *                                                  "created_at": "2021-01-15 12:59:20",
+     *                                                  "updated_at": "2021-01-20 04:25:15",
+     *                                                  "join_date": "10 days ago"
+     *                                              })
      *        )
      *     ),
      * @OA\Response(
@@ -130,6 +141,56 @@ class UserController extends Controller
         return UserCollection::make($users);
     }
 
+    /**
+     * @OA\Get(
+     * path="/users/{user}",
+     * summary="Get user by id",
+     * description="Get user with relationship info",
+     * tags={"users"},
+     * security={ {"bearer": {} }},
+     * @OA\Parameter(
+     *      name="user",
+     *      description="User id to fetch",
+     *      required=true,
+     *      in="path",
+     *      @OA\Schema(
+     *          type="integer"
+     *      )
+     *  ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="data", type="object", example={
+     *                                                  "id": 1,
+     *                                                  "avatar": "http://site.com/img/default.png",
+     *                                                  "friends_count": 0,
+     *                                                  "name": "Test",
+     *                                                  "surname": "First",
+     *                                                  "relationship": {"id": 8, "status": "pending", "is_sender": false},
+     *                                                  "created_at": "2021-01-16T13:39:29",
+     *                                                  "updated_at": "2021-01-16T13:39:29",
+     *                                                  "join_date": "4 days ago"
+     *                                              })
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Unauthenticated error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="User not found"
+     * )
+     *
+     * )
+     *
+     * @param User $user
+     * @return UserResource
+     */
     public function show(User $user)
     {
         $user->appendRelationshipAttributes();
