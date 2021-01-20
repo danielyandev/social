@@ -79,8 +79,8 @@ class RegisterController extends Controller
      * path="/register",
      * summary="Sign up",
      * description="Register new user",
-     * operationId="authRegister",
      * tags={"auth"},
+     * security={},
      * @OA\RequestBody(
      *    required=true,
      *    description="Pass user credentials",
@@ -106,9 +106,9 @@ class RegisterController extends Controller
      *    description="Validation errors",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="The given data was invalid."),
-     *       @OA\Property(property="errors", type="object", example={{
+     *       @OA\Property(property="errors", type="object", example={
      *                  "password": {"The password must be at least 8 characters.","The password confirmation does not match."}
-     *                }})
+     *                })
      *        )
      *     )
      *

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ApiHelper;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -13,19 +12,45 @@ use Illuminate\Routing\Controller as BaseController;
  *    title="Social Network",
  *    version="1.0.0"
  * )
- * @OA\Server(url="http://social.loc/api")
+ * @OA\Server(url=SWAGGER_API_URL)
+ *
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     description="Use /login endpoint to get access token",
+ *     name="Bearer",
+ *     in="header",
+ *     scheme="bearer",
+ *     securityScheme="bearer"
+ * )
+ *
  */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * @param array $data
+     * @param string $message
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sendSuccess($message = '', $data = [])
     {
-        return ApiHelper::sendSuccess($message, $data);
+        return response()->json(
+            compact('data', 'message')
+        );
     }
 
-    public function sendError($message = '', $data = [], $status = 400)
+    /**
+     * @param string $message
+     * @param array $errors
+     * @param int $status
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendError($message = '', $errors = [], $status = 400)
     {
-        return ApiHelper::sendError($message, $data, $status);
+        return response()->json(
+            compact('errors', 'message'),
+            $status
+        );
     }
 }

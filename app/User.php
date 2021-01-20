@@ -10,7 +10,6 @@ use Laravel\Passport\HasApiTokens;
 /**
  *
  * @OA\Schema(
- * required={"password"},
  * @OA\Xml(name="User"),
  * @OA\Property(property="id", type="integer", readOnly="true", example="1"),
  * @OA\Property(property="name", type="string", maxLength=255, example="John"),

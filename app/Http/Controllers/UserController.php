@@ -12,6 +12,27 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     /**
+     * @OA\Get(
+     * path="/user",
+     * summary="Get auth user",
+     * tags={"user"},
+     * security={ {"bearer": {} }},
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="data", type="object", ref="#/components/schemas/User")
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Unauthenticated error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated")
+     *        )
+     *     )
+     *
+     * )
      *
      *
      * @param Request $request
@@ -23,6 +44,10 @@ class UserController extends Controller
         return UserResource::make($user);
     }
 
+    /**
+     * @param Request $request
+     * @return UserCollection|array
+     */
     public function search(Request $request)
     {
         if (!$request->phrase){
@@ -67,6 +92,58 @@ class UserController extends Controller
         return UserResource::make($user);
     }
 
+    /**
+     * @OA\Get(
+     * path="/user/friends?page={page}",
+     * summary="Get auth user friends",
+     * tags={"user"},
+     * security={ {"bearer": {} }},
+     * @OA\Parameter(
+     *      name="page",
+     *      description="Paginates data",
+     *      required=false,
+     *      in="path",
+     *      @OA\Schema(
+     *          type="integer",
+     *          default=1
+     *      )
+     *  ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="data", type="array",
+     *              @OA\Items(ref="#/components/schemas/User")
+     *          ),
+     *       @OA\Property(property="links", type="object", example={
+     *                                          "first": "http://site.com/api/user/friends?page=1",
+     *                                          "last": "http://site.com/api/user/friends?page=1",
+     *                                          "next": null,
+     *                                          "prev": null
+     *                                      }),
+     *     @OA\Property(property="meta", type="object", example={
+     *                                          "current_page":1,
+     *                                          "from":1,
+     *                                          "last_page":1,
+     *                                          "path":"http://site.com/api/user/friends",
+     *                                          "per_page":10,
+     *                                          "to":2,
+     *                                          "total":2
+     *                                      }),
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Unauthenticated error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *        )
+     *     )
+     *
+     * )
+     *
+     * @return UserCollection
+     */
     public function getFriends()
     {
         $friends = Auth::user()->friends()->paginate(10);

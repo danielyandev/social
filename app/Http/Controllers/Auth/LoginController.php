@@ -46,8 +46,8 @@ class LoginController extends Controller
      * path="/login",
      * summary="Sign in",
      * description="Login by email, password",
-     * operationId="authLogin",
      * tags={"auth"},
+     * security={},
      * @OA\RequestBody(
      *    required=true,
      *    description="Pass user credentials",

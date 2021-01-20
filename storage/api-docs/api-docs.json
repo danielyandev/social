@@ -17,7 +17,7 @@
                 ],
                 "summary": "Sign in",
                 "description": "Login by email, password",
-                "operationId": "authLogin",
+                "operationId": "App\\Http\\Controllers\\Auth\\LoginController::login",
                 "requestBody": {
                     "description": "Pass user credentials",
                     "required": true,
@@ -95,7 +95,8 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             }
         },
         "/register": {
@@ -105,7 +106,7 @@
                 ],
                 "summary": "Sign up",
                 "description": "Register new user",
-                "operationId": "authRegister",
+                "operationId": "App\\Http\\Controllers\\Auth\\RegisterController::register",
                 "requestBody": {
                     "description": "Pass user credentials",
                     "required": true,
@@ -183,14 +184,12 @@
                                         },
                                         "errors": {
                                             "type": "object",
-                                            "example": [
-                                                {
-                                                    "password": [
-                                                        "The password must be at least 8 characters.",
-                                                        "The password confirmation does not match."
-                                                    ]
-                                                }
-                                            ]
+                                            "example": {
+                                                "password": [
+                                                    "The password must be at least 8 characters.",
+                                                    "The password confirmation does not match."
+                                                ]
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -198,16 +197,144 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get auth user",
+                "operationId": "App\\Http\\Controllers\\UserController::getAuthUser",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/user/friends?page={page}": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get auth user friends",
+                "operationId": "App\\Http\\Controllers\\UserController::getFriends",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "description": "Paginates data",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object",
+                                            "example": {
+                                                "first": "http://site.com/api/user/friends?page=1",
+                                                "last": "http://site.com/api/user/friends?page=1",
+                                                "next": null,
+                                                "prev": null
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "example": {
+                                                "current_page": 1,
+                                                "from": 1,
+                                                "last_page": 1,
+                                                "path": "http://site.com/api/user/friends",
+                                                "per_page": 10,
+                                                "to": 2,
+                                                "total": 2
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         }
     },
     "components": {
         "schemas": {
             "User": {
-                "required": [
-                    "password"
-                ],
                 "properties": {
                     "id": {
                         "type": "integer",
@@ -271,6 +398,15 @@
                 "xml": {
                     "name": "User"
                 }
+            }
+        },
+        "securitySchemes": {
+            "bearer": {
+                "type": "http",
+                "description": "Use /login endpoint to get access token",
+                "name": "Bearer",
+                "in": "header",
+                "scheme": "bearer"
             }
         }
     },

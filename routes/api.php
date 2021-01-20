@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+define('SWAGGER_API_URL', config('app.url') . '/api');
+
 Route::middleware('guest:api')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
