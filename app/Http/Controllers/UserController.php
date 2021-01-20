@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    /**
+     *
+     *
+     * @param Request $request
+     * @return UserResource
+     */
     public function getAuthUser(Request $request)
     {
         $user = $request->user()->append('friends_count', 'friend_requests_count');

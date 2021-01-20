@@ -11,8 +11,9 @@ use Illuminate\Routing\Controller as BaseController;
 /**
  * @OA\Info(
  *    title="Social Network",
- *    version="1.0.0",
+ *    version="1.0.0"
  * )
+ * @OA\Server(url="http://social.loc/api")
  */
 class Controller extends BaseController
 {

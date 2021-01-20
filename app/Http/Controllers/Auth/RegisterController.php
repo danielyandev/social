@@ -76,7 +76,7 @@ class RegisterController extends Controller
 
     /**
      * @OA\Post(
-     * path="/api/register",
+     * path="/register",
      * summary="Sign up",
      * description="Register new user",
      * operationId="authRegister",

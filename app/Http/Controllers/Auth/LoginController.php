@@ -43,7 +43,7 @@ class LoginController extends Controller
 
     /**
      * @OA\Post(
-     * path="/api/login",
+     * path="/login",
      * summary="Sign in",
      * description="Login by email, password",
      * operationId="authLogin",
