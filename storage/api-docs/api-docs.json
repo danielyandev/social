@@ -248,6 +248,79 @@
                 ]
             }
         },
+        "/user/search?phrase={phrase}&friends={friends}&page={page}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Search in all users",
+                "operationId": "App\\Http\\Controllers\\UserController::search",
+                "parameters": [
+                    {
+                        "name": "phrase",
+                        "in": "path",
+                        "description": "Phrase to search. Formats: 'name', 'surname', 'name surname', 'surname name'",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "friends",
+                        "in": "path",
+                        "description": "Phrase to search in friends list. Formats: 'name', 'surname', 'name surname', 'surname name'",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "description": "Paginates data",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserCollection"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "/user/friends?page={page}": {
             "get": {
                 "tags": [
@@ -361,16 +434,6 @@
                         "type": "string",
                         "readOnly": "true",
                         "example": "http://site.com/img/avatar.png"
-                    },
-                    "friends_count": {
-                        "type": "integer",
-                        "readOnly": "true",
-                        "example": "355"
-                    },
-                    "friend_requests_count": {
-                        "type": "integer",
-                        "readOnly": "true",
-                        "example": "15"
                     },
                     "email": {
                         "description": "User unique email address",

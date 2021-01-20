@@ -45,7 +45,55 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @OA\Get(
+     * path="/user/search?phrase={phrase}&friends={friends}&page={page}",
+     * summary="Search in all users",
+     * tags={"users"},
+     * security={ {"bearer": {} }},
+     * @OA\Parameter(
+     *      name="phrase",
+     *      description="Phrase to search. Formats: 'name', 'surname', 'name surname', 'surname name'",
+     *      required=true,
+     *      in="path",
+     *      @OA\Schema(
+     *          type="string"
+     *      )
+     *  ),
+     * @OA\Parameter(
+     *      name="friends",
+     *      description="Phrase to search in friends list. Formats: 'name', 'surname', 'name surname', 'surname name'",
+     *      required=false,
+     *      in="path",
+     *      @OA\Schema(
+     *          type="boolean",
+     *          default=false
+     *      )
+     *  ),
+     * @OA\Parameter(
+     *      name="page",
+     *      description="Paginates data",
+     *      required=false,
+     *      in="path",
+     *      @OA\Schema(
+     *          type="integer",
+     *          default=1
+     *      )
+     *  ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(ref="#/components/schemas/UserCollection")
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Unauthenticated error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *        )
+     *     )
+     *
+     * )
+     *
      * @return UserCollection|array
      */
     public function search(Request $request)
