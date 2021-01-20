@@ -4,6 +4,17 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Schema(
+ *      @OA\Xml(name="PostResource"),
+ *      @OA\Property(
+ *          property="data",
+ *          ref="#/components/schemas/Post"
+ *      )
+ * )
+ *
+ * Class PostResource
+ */
 class PostResource extends JsonResource
 {
     /**

@@ -201,6 +201,132 @@
                 "security": []
             }
         },
+        "/users/{user}/posts": {
+            "get": {
+                "tags": [
+                    "feed"
+                ],
+                "summary": "Get user's feed posts",
+                "operationId": "App\\Http\\Controllers\\PostController::index",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostCollection"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "feed"
+                ],
+                "summary": "Post to user's feed",
+                "operationId": "App\\Http\\Controllers\\PostController::store",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This user is not in friends list"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
         "/user": {
             "get": {
                 "tags": [
@@ -467,6 +593,52 @@
     },
     "components": {
         "schemas": {
+            "PostCollection": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Post"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "example": {
+                            "first": "first page link",
+                            "last": "last page link",
+                            "next": "next page link",
+                            "prev": "prev page link"
+                        }
+                    },
+                    "meta": {
+                        "type": "object",
+                        "example": {
+                            "current_page": 1,
+                            "from": 1,
+                            "last_page": 1,
+                            "path": "full url path",
+                            "per_page": 10,
+                            "to": 2,
+                            "total": 2
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PostCollection"
+                }
+            },
+            "PostResource": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/Post"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PostResource"
+                }
+            },
             "UserCollection": {
                 "properties": {
                     "data": {
@@ -511,6 +683,55 @@
                 "type": "object",
                 "xml": {
                     "name": "UserResource"
+                }
+            },
+            "Post": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "posted_user_id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "2"
+                    },
+                    "posted_user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "is_public": {
+                        "type": "boolean",
+                        "readOnly": "true",
+                        "example": "true"
+                    },
+                    "text": {
+                        "type": "string",
+                        "example": "Post text"
+                    },
+                    "created_at": {
+                        "description": "Registration date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2021-01-15 12:59:20"
+                    },
+                    "updated_at": {
+                        "description": "Last updated date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2021-01-20 04:25:15"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Post"
                 }
             },
             "User": {

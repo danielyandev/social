@@ -12,6 +12,39 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     /**
+     * @OA\Get(
+     * path="/users/{user}/posts",
+     * summary="Get user's feed posts",
+     * tags={"feed"},
+     * security={ {"bearer": {} }},
+     * @OA\Parameter(
+     *      name="user",
+     *      description="User id",
+     *      required=true,
+     *      in="path",
+     *      @OA\Schema(
+     *          type="integer"
+     *      )
+     *  ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(ref="#/components/schemas/PostCollection")
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Unauthenticated error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=404,
+     *    description="User not found"
+     * )
+     *
+     * )
+     *
      * Display a listing of the resource.
      * @param Request $request
      * @param User $user
@@ -40,6 +73,46 @@ class PostController extends Controller
     }
 
     /**
+     * @OA\Post(
+     * path="/users/{user}/posts",
+     * summary="Post to user's feed",
+     * tags={"feed"},
+     * security={ {"bearer": {} }},
+     * @OA\Parameter(
+     *      name="user",
+     *      description="User id",
+     *      required=true,
+     *      in="path",
+     *      @OA\Schema(
+     *          type="integer"
+     *      )
+     *  ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(ref="#/components/schemas/PostResource")
+     *     ),
+     * @OA\Response(
+     *    response=400,
+     *    description="Bad request",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="This user is not in friends list"),
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Unauthenticated error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Validation errors"
+     * )
+     *
+     * )
+     *
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
