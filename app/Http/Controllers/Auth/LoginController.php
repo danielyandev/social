@@ -42,6 +42,45 @@ class LoginController extends Controller
     }
 
     /**
+     * @OA\Post(
+     * path="/api/login",
+     * summary="Sign in",
+     * description="Login by email, password",
+     * operationId="authLogin",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"email","password"},
+     *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Successfully logged in"),
+     *       @OA\Property(property="data", type="object", example={
+     *                                          "access_token": "Generated token",
+     *                                          "expires_in": "Expiration time in seconds",
+     *                                          "token_type": "Bearer",
+     *                                          "refresh_token": "Generated refresh token"
+     *                                      })
+     *
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Invalid credentials"),
+     *       @OA\Property(property="errors", type="object", example={ "email": {"Invalid email and/or password"} })
+     *        )
+     *     )
+     * )
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
@@ -55,7 +94,9 @@ class LoginController extends Controller
         $this->validate($request, $rules);
 
         if (!Auth::attempt($request->only(['email', 'password']))) {
-            return $this->sendError('Invalid credentials', ['User not found']);
+            return $this->sendError('The given data was invalid.', [
+                'email' => 'Invalid email and/or password'
+            ], 422);
         }
 
         return $this->sendSuccess('Successfully logged in', $this->getToken($request));
