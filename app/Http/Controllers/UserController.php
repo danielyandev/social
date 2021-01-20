@@ -111,26 +111,7 @@ class UserController extends Controller
      * @OA\Response(
      *    response=200,
      *    description="Success",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="data", type="array",
-     *              @OA\Items(ref="#/components/schemas/User")
-     *          ),
-     *       @OA\Property(property="links", type="object", example={
-     *                                          "first": "http://site.com/api/user/friends?page=1",
-     *                                          "last": "http://site.com/api/user/friends?page=1",
-     *                                          "next": null,
-     *                                          "prev": null
-     *                                      }),
-     *     @OA\Property(property="meta", type="object", example={
-     *                                          "current_page":1,
-     *                                          "from":1,
-     *                                          "last_page":1,
-     *                                          "path":"http://site.com/api/user/friends",
-     *                                          "per_page":10,
-     *                                          "to":2,
-     *                                          "total":2
-     *                                      }),
-     *        )
+     *    @OA\JsonContent(ref="#/components/schemas/UserCollection")
      *     ),
      * @OA\Response(
      *    response=401,

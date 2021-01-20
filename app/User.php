@@ -10,17 +10,17 @@ use Laravel\Passport\HasApiTokens;
 /**
  *
  * @OA\Schema(
- * @OA\Xml(name="User"),
- * @OA\Property(property="id", type="integer", readOnly="true", example="1"),
- * @OA\Property(property="name", type="string", maxLength=255, example="John"),
- * @OA\Property(property="surname", type="string", maxLength=255, example="Doe"),
- * @OA\Property(property="avatar", type="string", readOnly="true", example="http://site.com/img/avatar.png"),
- * @OA\Property(property="friends_count", type="integer", readOnly="true", example="355"),
- * @OA\Property(property="friend_requests_count", type="integer", readOnly="true", example="15"),
- * @OA\Property(property="email", type="string", readOnly="true", format="email", description="User unique email address", example="user@gmail.com"),
- * @OA\Property(property="created_at", type="string", readOnly="true", format="date-time", description="Registration date and time", example="2021-01-15 12:59:20"),
- * @OA\Property(property="updated_at", type="string", readOnly="true", format="date-time", description="Last updated date and time", example="2021-01-20 04:25:15"),
- * @OA\Property(property="join_date", type="string", readOnly="true", description="Registration date in human radable format", example="10 days ago")
+ *      @OA\Xml(name="User"),
+ *      @OA\Property(property="id", type="integer", readOnly="true", example="1"),
+ *      @OA\Property(property="name", type="string", maxLength=255, example="John"),
+ *      @OA\Property(property="surname", type="string", maxLength=255, example="Doe"),
+ *      @OA\Property(property="avatar", type="string", readOnly="true", example="http://site.com/img/avatar.png"),
+ *      @OA\Property(property="friends_count", type="integer", readOnly="true", example="355"),
+ *      @OA\Property(property="friend_requests_count", type="integer", readOnly="true", example="15"),
+ *      @OA\Property(property="email", type="string", readOnly="true", format="email", description="User unique email address", example="user@gmail.com"),
+ *      @OA\Property(property="created_at", type="string", readOnly="true", format="date-time", description="Registration date and time", example="2021-01-15 12:59:20"),
+ *      @OA\Property(property="updated_at", type="string", readOnly="true", format="date-time", description="Last updated date and time", example="2021-01-20 04:25:15"),
+ *      @OA\Property(property="join_date", type="string", readOnly="true", description="Registration date in human radable format", example="10 days ago")
  * )
  *
  * Class User
