@@ -43,3 +43,5 @@ PASSPORT_PASSWORD_CLIENT_SECRET=
 ## Have fun
 Register, find your friends and have a good time.
 
+## For developers
+Visit {your domain}/api/docs for api documentation
