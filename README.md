@@ -40,8 +40,21 @@ PASSPORT_PASSWORD_CLIENT_ID=
 PASSPORT_PASSWORD_CLIENT_SECRET=
 ```
 
-## Have fun
+#### Cache config
+```
+php artisan config:cache
+```
+
+#### Have fun
 Register, find your friends and have a good time.
 
-## For developers
+#### For developers
 Visit {your domain}/api/docs for api documentation
+
+#### What's used in project
+
+- Laravel passport
+- Vue (SPA)
+- Vuex
+- Swagger
+
