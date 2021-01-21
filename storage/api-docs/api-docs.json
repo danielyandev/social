@@ -619,9 +619,6 @@
                     },
                     "404": {
                         "description": "Relationship not found"
-                    },
-                    "422": {
-                        "description": "Validation errors"
                     }
                 },
                 "security": []
