@@ -4,6 +4,17 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Schema(
+ *      @OA\Xml(name="RelationshipResource"),
+ *      @OA\Property(
+ *          property="data",
+ *          ref="#/components/schemas/Relationship"
+ *      )
+ * )
+ *
+ * Class RelationshipResource
+ */
 class RelationshipResource extends JsonResource
 {
     /**

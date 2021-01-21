@@ -327,6 +327,306 @@
                 ]
             }
         },
+        "/relationships": {
+            "get": {
+                "tags": [
+                    "friend requests"
+                ],
+                "summary": "Get auth user's friend requests",
+                "operationId": "App\\Http\\Controllers\\RelationshipController::index",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "example": {
+                                                    "id": 2,
+                                                    "name": "John",
+                                                    "surname": "Doe",
+                                                    "avatar": "http://site.com/img/default.png",
+                                                    "join_date": "4 days ago",
+                                                    "receiver_user_id": 3,
+                                                    "relationship": {
+                                                        "id": 2,
+                                                        "status": "pending",
+                                                        "is_sender": true
+                                                    },
+                                                    "relationship_id": 2,
+                                                    "sender_user_id": 2,
+                                                    "status": 0,
+                                                    "created_at": "2021-01-16T13:49:17",
+                                                    "updated_at": "2021-01-16T13:49:17"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "friend requests"
+                ],
+                "summary": "Send friend request",
+                "operationId": "App\\Http\\Controllers\\RelationshipController::store",
+                "requestBody": {
+                    "description": "Pass user id",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1 | Relationship id"
+                                        },
+                                        "receiver_user_id": {
+                                            "type": "integer",
+                                            "example": "2"
+                                        },
+                                        "sender_user_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/relationships/{relationship}": {
+            "put": {
+                "tags": [
+                    "friend requests"
+                ],
+                "summary": "Respond to friend request",
+                "operationId": "App\\Http\\Controllers\\RelationshipController::update",
+                "parameters": [
+                    {
+                        "name": "relationship",
+                        "in": "path",
+                        "description": "Relationship id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass status",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "example": "accepted"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1 | Relationship id"
+                                        },
+                                        "receiver_user_id": {
+                                            "type": "integer",
+                                            "example": "2"
+                                        },
+                                        "sender_user_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "accepted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Relationship not found"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": []
+            },
+            "delete": {
+                "tags": [
+                    "friend requests"
+                ],
+                "summary": "Unfriend",
+                "operationId": "App\\Http\\Controllers\\RelationshipController::destroy",
+                "parameters": [
+                    {
+                        "name": "relationship",
+                        "in": "path",
+                        "description": "Relationship id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Relationship successfully deleted"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Relationship not found"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": []
+            }
+        },
         "/user": {
             "get": {
                 "tags": [
@@ -639,6 +939,17 @@
                     "name": "PostResource"
                 }
             },
+            "RelationshipResource": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/Relationship"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "RelationshipResource"
+                }
+            },
             "UserCollection": {
                 "properties": {
                     "data": {
@@ -732,6 +1043,34 @@
                 "type": "object",
                 "xml": {
                     "name": "Post"
+                }
+            },
+            "Relationship": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "sender_user_id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "receiver_user_id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "2"
+                    },
+                    "status": {
+                        "type": "string",
+                        "readOnly": "true",
+                        "example": "pending"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Relationship"
                 }
             },
             "User": {

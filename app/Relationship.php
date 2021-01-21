@@ -4,6 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ *
+ * @OA\Schema(
+ *      @OA\Xml(name="Relationship"),
+ *      @OA\Property(property="id", type="integer", readOnly="true", example="1"),
+ *      @OA\Property(property="sender_user_id", type="integer", readOnly="true", example="1"),
+ *      @OA\Property(property="receiver_user_id", type="integer", readOnly="true", example="2"),
+ *      @OA\Property(property="status", type="string", readOnly="true", example="pending"),
+ * )
+ *
+ * Class Relationship
+ */
+
 class Relationship extends Model
 {
     public static $statuses = [
