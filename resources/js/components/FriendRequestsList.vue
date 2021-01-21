@@ -8,8 +8,8 @@
                 </h6>
                 <a @click.prevent="show_user_page(user.id)" href="#" class="card-link">View profile</a>
                 <div v-if="user.relationship.status === 'pending'">
-                    <a @click.prevent="respond_request(user.id, 'accepted')" href="#" class="card-link text-success">Accept</a>
-                    <a @click.prevent="respond_request(user.id, 'rejected')" href="#" class="card-link text-danger">Reject</a>
+                    <a @click.prevent="respond_request(user.relationship.id, 'accepted')" href="#" class="card-link text-success">Accept</a>
+                    <a @click.prevent="respond_request(user.relationship.id, 'rejected')" href="#" class="card-link text-danger">Reject</a>
                 </div>
                 <p v-else-if="user.relationship.status === 'rejected'" class="text-danger">Rejected</p>
                 <p v-else-if="user.relationship.status === 'accepted'" class="text-success">Accepted</p>

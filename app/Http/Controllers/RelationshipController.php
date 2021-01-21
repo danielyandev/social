@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Relationships\DestroyRelationshipRequest;
+use App\Http\Requests\Relationships\StoreRelationshipRequest;
+use App\Http\Requests\Relationships\UpdateRelationshipRequest;
 use App\Http\Resources\RelationshipResource;
 use App\Http\Resources\UserCollection;
 use App\Relationship;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RelationshipController extends Controller
@@ -53,6 +55,7 @@ class RelationshipController extends Controller
      */
     public function index()
     {
+        // todo paginate, there can be many requests in the future
         $requestedUsers = Auth::user()->friendRequests;
         foreach ($requestedUsers as $user){
             $user->appendRelationshipAttributes();
@@ -93,6 +96,13 @@ class RelationshipController extends Controller
      *        )
      *     ),
      * @OA\Response(
+     *    response=403,
+     *    description="Unauthorized error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="This action is unauthorized"),
+     *    )
+     * ),
+     * @OA\Response(
      *    response=422,
      *    description="Validation errors"
      * )
@@ -100,21 +110,11 @@ class RelationshipController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return RelationshipResource|\Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StoreRelationshipRequest $request
+     * @return RelationshipResource
      */
-    public function store(Request $request)
+    public function store(StoreRelationshipRequest $request)
     {
-        $rules = [
-            'user_id' => ['required', 'integer']
-        ];
-        $this->validate($request, $rules);
-        $exists = Relationship::whereIds(Auth::id(), $request->user_id)->exists();
-        if ($exists){
-            return $this->sendError('Relationship had already been created');
-        }
-
         $relationship = Relationship::create([
             'sender_user_id' => Auth::id(),
             'receiver_user_id' => $request->user_id,
@@ -168,6 +168,13 @@ class RelationshipController extends Controller
      *        )
      *     ),
      * @OA\Response(
+     *    response=403,
+     *    description="Unauthorized error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="This action is unauthorized"),
+     *    )
+     * ),
+     * @OA\Response(
      *    response=404,
      *    description="Relationship not found"
      * ),
@@ -179,22 +186,12 @@ class RelationshipController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateRelationshipRequest $request
      * @param Relationship $relationship
      * @return RelationshipResource|\Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(Request $request, Relationship $relationship)
+    public function update(UpdateRelationshipRequest $request, Relationship $relationship)
     {
-        $rules = [
-            'status' => ['string', 'in:accepted,rejected']
-        ];
-        $this->validate($request, $rules);
-
-        if ($relationship->status == $request->status){
-            return $this->sendError('Relationship had already been ' . $request->status);
-        }
-
         $relationship->status = Relationship::$statuses[$request->status];
         $relationship->save();
 
@@ -233,6 +230,13 @@ class RelationshipController extends Controller
      *        )
      *     ),
      * @OA\Response(
+     *    response=403,
+     *    description="Unauthorized error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="This action is unauthorized"),
+     *    )
+     * ),
+     * @OA\Response(
      *    response=404,
      *    description="Relationship not found"
      * ),
@@ -244,7 +248,7 @@ class RelationshipController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroy(Relationship $relationship)
+    public function destroy(DestroyRelationshipRequest $request, Relationship $relationship)
     {
         $relationship->delete();
         return $this->sendSuccess('Relationship successfully deleted');

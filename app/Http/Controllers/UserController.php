@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\SearchUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\User;
@@ -101,17 +101,19 @@ class UserController extends Controller
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Unauthenticated"),
      *        )
-     *     )
+     *     ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Validation errors"
+     * )
      *
      * )
      *
+     * @param SearchUserRequest $request
      * @return UserCollection|array
      */
-    public function search(Request $request)
+    public function search(SearchUserRequest $request)
     {
-        if (!$request->phrase){
-            return [];
-        }
         $users = User::where('id', '!=', Auth::id())->where(function ($query) use ($request){
             $spaced = explode(' ', $request->phrase);
             $name = $spaced[0];
@@ -195,6 +197,7 @@ class UserController extends Controller
     {
         $user->appendRelationshipAttributes();
         $user->append('friends_count');
+        // if user requested his own page
         if ($user->id == Auth::id()){
             $user->append('friend_requests_count');
         }

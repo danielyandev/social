@@ -316,6 +316,22 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Unauthorized error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Validation errors"
                     }
@@ -458,6 +474,22 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -747,6 +779,9 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation errors"
                     }
                 },
                 "security": [

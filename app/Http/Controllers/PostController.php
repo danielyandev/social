@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
 use App\Post;
@@ -107,6 +108,13 @@ class PostController extends Controller
      *        )
      *     ),
      * @OA\Response(
+     *    response=403,
+     *    description="Unauthorized error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="This action is unauthorized"),
+     *    )
+     * ),
+     * @OA\Response(
      *    response=422,
      *    description="Validation errors"
      * )
@@ -115,22 +123,12 @@ class PostController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return PostResource|\Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StorePostRequest $request
+     * @param $user_id
+     * @return PostResource
      */
-    public function store(Request $request, $user_id)
+    public function store(StorePostRequest $request, $user_id)
     {
-        $rules = [
-            'text' => ['required', 'string'],
-            'is_public' => ['required', 'boolean']
-        ];
-        $this->validate($request, $rules);
-
-        if (Auth::user()->hasFriend($user_id)){
-            return $this->sendError('This user is not in friends list');
-        }
-
         $post = new Post();
         $post->fill($request->only(['text', 'is_public']));
         $post->posted_user_id = Auth::id();

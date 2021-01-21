@@ -44,4 +44,10 @@ class Relationship extends Model
     {
         return self::getStatusLabel($status);
     }
+
+    public function hasMember($user)
+    {
+        $user_id = $user instanceof User ? $user->id : $user;
+        return in_array($user_id, [$this->sender_user_id, $this->receiver_user_id]);
+    }
 }
