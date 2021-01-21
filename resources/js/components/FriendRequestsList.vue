@@ -34,7 +34,6 @@
             fetch_requests: async function () {
                 const {data} = await axios.get('/relationships')
                 this.users = data.data
-                console.log(this.users)
             },
             show_user_page: function (id) {
                 // close modal if open
@@ -49,7 +48,7 @@
             respond_request: async function (id, status) {
                 const {data} = await axios.put('/relationships/' + id, {status})
                 this.users.map(user => {
-                    if (user.id === id){
+                    if (user.relationship.id === id){
                         user.relationship.status = data.data.status
                     }
                 })
